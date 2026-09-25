@@ -31,7 +31,7 @@ Dear recruiters, welcome! As you explore this portfolio you'll see a steady jour
 
 | # | Project | Description | Tech |
 |---|---------|-------------|------|
-| 01 | [Static Website on S3](./01-static-website-s3) | A static website hosted on Amazon S3, fully provisioned with Terraform. | AWS S3, Terraform | but down due to cost 
+| 01 | [Static Website on S3](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_1/01-static-website-s3) | A static website hosted on Amazon S3, fully provisioned with Terraform. | AWS S3, Terraform | but down due to cost 
 | 02 | *Coming next week...* | | |
 
 ### 01 – Static Website on S3
