@@ -1,6 +1,6 @@
-# ☁️ Πάνω από τα Σύννεφα: Discovering Cloud Engineering
+# ☁️ Discovering Cloud Engineering
 
-**Kalimera!** Welcome to **Πάνω από τα Σύννεφα** (*Above the Clouds*), a journey into cloud engineering where I share my passion for building, automating and securing infrastructure, along with a curated collection of my hands-on cloud projects.
+**Kalimera!** Welcome to, a journey into cloud engineering where I share my passion for building, automating and securing infrastructure, along with a curated collection of my hands-on cloud projects.
 
 <p align="center">
   <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDlzZjU5dmk4MjBrajY2ZWthanU0YmU1Zm9hMnhqbzVoOGM0cGZ2ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26xBF35LZZva64nuw/giphy.gif" alt="Project Preview">
