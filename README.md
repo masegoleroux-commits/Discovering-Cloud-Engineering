@@ -43,7 +43,7 @@ A simple website hosted on Amazon S3 and deployed entirely with Terraform. The p
 
 A secured API in front of a SQL Server payments database with made-up data.
 
-What it shows: T-SQL (tables, stored procedures, roles, migrations with rollback), least-privilege access (the API can only run two procedures), card masking, secrets management, a private network, REST and SOAP, and 27 automated Postman tests including SQL injection and XML attacks.
-Status: code complete, linted and unit-tested. Not yet successfully deployed. The sandbox blocked password generation, inline IAM policies, and policy deletion; we fixed each or worked around it. The last attempt rolled back, and we never captured the cause.
+-What it shows: T-SQL (tables, stored procedures, roles, migrations with rollback), least-privilege access (the API can only run two procedures), card masking, secrets management, a private network, REST and SOAP, and 27 automated Postman tests including SQL injection and XML attacks.
+-Status: code complete, linted and unit-tested. Not yet successfully deployed. The sandbox blocked password generation, inline IAM policies, and policy deletion; we fixed each or worked around it. The last attempt rolled back, and we never captured the cause.
 
 ## 🤝 Connect and Collaborate
