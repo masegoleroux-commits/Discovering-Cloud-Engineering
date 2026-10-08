@@ -32,7 +32,7 @@ Dear recruiters, welcome! As you explore this portfolio you'll see a steady jour
 | # | Project | Description | Tech |
 |---|---------|-------------|------|
 | 01 | [Static Website on S3](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_1/01-static-website-s3) | A static website hosted on Amazon S3, fully provisioned with Terraform. | AWS S3, Terraform | but down due to cost 
-| 2  | [Secure Payments Data API](https://github.com/<your-username>/payments-api) | Least-privilege REST and SOAP API over a SQL Server payments database (synthetic data). Card numbers masked in T-SQL, API login limited to stored procedures, credentials in Secrets Manager, versioned migrations with rollback, and 27 Postman/Newman assertions covering SQL injection and XML attacks. | AWS Lambda, API Gateway, RDS SQL Server, T-SQL, Secrets Manager, KMS, VPC, CloudFormation, Python, Postman/Newman, GitHub Actions 
+| 02  | [Secure Payments Data API](https://github.com/<your-username>/payments-api) | Least-privilege REST and SOAP API over a SQL Server payments database (synthetic data). Card numbers masked in T-SQL, API login limited to stored procedures, credentials in Secrets Manager, versioned migrations with rollback, and 27 Postman/Newman assertions covering SQL injection and XML attacks. | AWS Lambda, API Gateway, RDS SQL Server, T-SQL, Secrets Manager, KMS, VPC, CloudFormation, Python, Postman/Newman, GitHub Actions 
 | 03  | *Coming next week...* | | |
 
 ### 01 – Static Website on S3
