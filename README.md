@@ -63,24 +63,11 @@ Terraform creates everything; visitors read the site straight from the S3 websit
 </details>
 <details>
 <summary><b>02 – Secure Payments Data API</b></summary>
-```mermaid
-flowchart LR
-  C["Client<br/>REST or SOAP"] -->|HTTPS| G["API Gateway"]
-  subgraph VPC["Private VPC"]
-    L["Lambda<br/>Python"]
-    DB[("RDS SQL Server<br/>synthetic payments data")]
-  end
-  G --> L
-  L -->|"EXEC 2 stored procedures only"| DB
-  L -->|"fetch DB credentials"| SM["Secrets Manager"]
-  SM --- KMS["KMS key"]
-  T["Postman / Newman<br/>27 security tests"] -.->|"SQLi + XML attack tests"| G
-```
- 
-The API login can only run two stored procedures, and card numbers are masked inside the database before they leave it.
- 
+<img width="4032" height="650" alt="image" src="<img width="4032" height="121" alt="image" src="https://github.com/user-attachments/assets/40429ccc-eb13-4612-8680-bc530cae1a8a" />
+
 </details>
 <details>
+ 
 <summary><b>03 – Serverless Notes API</b></summary>
 ```mermaid
 flowchart LR
