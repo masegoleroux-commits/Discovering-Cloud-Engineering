@@ -1,58 +1,131 @@
 # ☁️ Discovering Cloud Engineering
 
-**Kalimera!** Welcome to, a journey into cloud engineering where I share my passion for building, automating and securing infrastructure, along with a curated collection of my hands-on cloud projects.
+**Aspiring Junior Cloud / DevOps Engineer** building hands-on AWS projects with Terraform, Python, containers and CI/CD, with a focus on security and cost control.
 
-<p align="center">
-  <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDlzZjU5dmk4MjBrajY2ZWthanU0YmU1Zm9hMnhqbzVoOGM0cGZ2ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26xBF35LZZva64nuw/giphy.gif" alt="Project Preview">
-</p>
-## 📅 Project Schedule
+📍 Johannesburg, South Africa · 🎯 Open to Junior Cloud, DevOps and Platform Engineer roles
 
-Expect a **new cloud project every week** as I keep building and sharing what I learn.
+<!-- Add your links here before publishing -->
+[LinkedIn](https://www.linkedin.com/in/your-profile) · [Email](mailto:your-email@example.com) · [CV](link-to-your-cv)
 
-## 🚀 Embark on the Cloud Adventure
+---
 
-In this repository you'll find a growing set of cloud projects, from simple static websites hosted on object storage to automated pipelines, containerised applications and monitored, production-style environments. Each project is small, self-contained and documented so you can read it, run it and learn from it.
+## ⚡ At a Glance (30-second summary)
 
-## 🛠️ Technologies Explored
+- **7 AWS projects**, each deployed from code (Infrastructure as Code) and torn down after testing to keep costs near zero.
+- **Security first:** least-privilege IAM, encryption, no SSH access, secrets in AWS Secrets Manager, and vulnerability scanning in CI/CD.
+- **Tested and automated:** unit tests, security tests, and GitHub Actions pipelines.
+- **Built within real limits:** projects run in a restricted AWS sandbox, so each design shows how I work around constraints on instance size, Lambda usage and service availability.
 
-- **AWS / Azure / GCP**: Core cloud services for compute, storage, networking and identity.
-- **Terraform**: Infrastructure as Code to provision repeatable, version-controlled environments.
-- **Docker & Kubernetes**: Packaging applications into containers and running them at scale.
-- **CI/CD (GitHub Actions)**: Automating testing, building and deployment.
-- **Linux & Bash**: The everyday foundation of cloud work.
-- **Monitoring & Logging**: Observing systems with tools like CloudWatch, Prometheus and Grafana.
-- **Cloud Security**: IAM, least privilege, encryption and secure-by-default configurations.
+## 🧰 Core Skills
 
-## 👋 For Recruiters
-
-Dear recruiters, welcome! As you explore this portfolio you'll see a steady journey of growth in cloud engineering. Each project shows practical skills in provisioning infrastructure, automating deployments and following good security and cost practices. Feel free to explore the code, review the documentation and picture how I could contribute to your team.
+| Area | Tools |
+|------|-------|
+| **Cloud (AWS)** | EC2, VPC, S3, Lambda, API Gateway, DynamoDB, RDS, ECS Fargate, ECR, ALB, Step Functions, EventBridge, SQS, SNS |
+| **Infrastructure as Code** | Terraform, CloudFormation |
+| **Containers** | Docker (multi-stage, non-root images) |
+| **CI/CD** | GitHub Actions, Trivy image scanning |
+| **Security** | IAM least privilege, KMS, Secrets Manager, CloudTrail, AWS Config, SSM Session Manager |
+| **Monitoring** | CloudWatch Logs, metrics and alarms, SNS alerting |
+| **Languages & OS** | Python, T-SQL, Bash, Linux (Ubuntu) |
+| **Testing** | pytest, moto, Postman/Newman |
 
 ## 📂 Projects
 
-| # | Project | Description | Tech |
-|---|---------|-------------|------|
-| 01 | [Static Website on S3](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_1/01-static-website-s3) | A static website hosted on Amazon S3, fully provisioned with Terraform. | AWS S3, Terraform | but down due to cost 
-| 02  | [Secure Payments Data API](https://github.com/<your-username>/payments-api) | Least-privilege REST and SOAP API over a SQL Server payments database (synthetic data). Card numbers masked in T-SQL, API login limited to stored procedures, credentials in Secrets Manager, versioned migrations with rollback, and 27 Postman/Newman assertions covering SQL injection and XML attacks. | AWS Lambda, API Gateway, RDS SQL Server, T-SQL, Secrets Manager, KMS, VPC, CloudFormation, Python, Postman/Newman, GitHub Actions 
-| 03  | *Coming next week...* | | |
+| # | Project | What it demonstrates | Key tech | Status |
+|---|---------|----------------------|----------|--------|
+| 01 | [Static Website on S3](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_1/01-static-website-s3) | Infrastructure as Code basics: provision, deploy and destroy a website from code | S3, Terraform | ✅ Complete (torn down to avoid cost) |
+| 02 | [Secure Payments Data API](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_2/02-secure-payments-api) | Protecting sensitive data: card masking, stored-procedure-only access, 27 automated security tests | Lambda, API Gateway, RDS SQL Server, Secrets Manager, KMS, CloudFormation | 🟡 Code complete, deployment in progress |
+| 03 | [Serverless Notes API](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_3/03-serverless-notes-api) | Serverless REST API with least-privilege IAM and zero-cost unit tests | API Gateway, Lambda, DynamoDB, Terraform | 📅 Publishing Mon 12 Oct 2026 |
+| 04 | [VPC + Hardened Web Server](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_4/04-vpc-hardened-web-server) | Networking from scratch and server hardening with no SSH | VPC, EC2, SSM, CloudWatch, Terraform | 📅 Publishing Tue 13 Oct 2026 |
+| 05 | [Containerised App on ECS Fargate](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_5/05-ecs-fargate-cicd) | Automated releases from git push to production, with security scanning and auto-rollback | Docker, ECS Fargate, ECR, GitHub Actions, Trivy | 📅 Publishing Wed 14 Oct 2026 |
+| 06 | [Event-Driven CSV Pipeline](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_6/06-event-driven-csv-pipeline) | Reliable data processing: retries, error handling and no silently lost files | S3, EventBridge, Step Functions, SQS | 📅 Publishing Thu 15 Oct 2026 |
+| 07 | [AWS Security Baseline](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_7/07-aws-security-baseline) | Account-wide auditing, compliance checks and security alerting, used to audit projects 03–06 | CloudTrail, AWS Config, CloudWatch | 📅 Publishing Fri 16 Oct 2026 |
+
+### 🗓️ Release schedule
+
+Projects 03–07 are being published one a day from **Monday 12 to Friday 16 October 2026**. After that, expect a new project every week.
+
+---
+
+## 🔍 Project Details
 
 ### 01 – Static Website on S3
 
-A simple website hosted on Amazon S3 and deployed entirely with Terraform. The project creates an S3 bucket, enables static website hosting, sets a public-read policy for the site files and uploads the HTML page. It shows the core Infrastructure as Code workflow: `init`, `plan`, `apply` and `destroy`.
+A website hosted on Amazon S3 and deployed entirely with Terraform: bucket creation, static hosting, a public-read policy for the site files, and the page upload.
+
+**Shows:** the core Infrastructure as Code workflow (`init`, `plan`, `apply`, `destroy`) and cost awareness. The live site was taken down to avoid charges and can be redeployed in one command.
 
 ### 02 – Secure Payments Data API
 
-A secured API in front of a SQL Server payments database with made-up data.
+A secured REST and SOAP API in front of a SQL Server payments database, using synthetic (made-up) data.
 
-**What It Shows:**
-* **T-SQL & Database:** Custom tables, stored procedures, roles, and versioned migrations with rollback
-* **Least-Privilege Access:** API access strictly restricted to running two specific stored procedures
-* **Data Protection & Secrets:** Native T-SQL card masking and credentials managed via AWS Secrets Manager
-* **Network & Protocols:** Provisioned inside a private VPC supporting both REST and SOAP endpoints
-* **Automated Security Testing:** 27 Postman/Newman test assertions covering SQL injection and XML attacks
+**Shows:**
+* **Data protection:** card numbers masked in T-SQL; credentials stored in AWS Secrets Manager
+* **Least privilege:** the API login can run only two specific stored procedures
+* **Database skills:** tables, stored procedures, roles, and versioned migrations with rollback
+* **Security testing:** 27 Postman/Newman assertions covering SQL injection and XML attacks
+* **Networking:** deployed inside a private VPC
 
-**Status:**
-* **Code Quality:** Complete, fully linted, and unit-tested
-* **Deployment Status:** In progress (pending successful deployment)
-* **Resolved Hurdles:** Fixed sandbox blockages around dynamic password generation, inline IAM policies, and policy deletion
-* **Current Blocker:** Last CloudFormation attempt rolled back prior to log capture; active troubleshooting ongoing
-## 🤝 Connect and Collaborate
+**Status:** code complete, linted and unit-tested. Deployment is in progress. I've solved several sandbox restrictions (password generation, inline IAM policies, policy deletion) and am troubleshooting a CloudFormation rollback.
+
+### 03 – Serverless Notes API
+
+A REST API to create, read, list and delete notes, built on API Gateway, Python Lambda and DynamoDB, all deployed with Terraform.
+
+**Shows:**
+* **Least-privilege IAM:** the function can perform 4 actions on one table and nothing else
+* **Testing without cost:** unit tests run against mocked AWS (moto), never touching the cloud
+* **Guardrails:** API throttling and validated limits for timeout and memory
+
+### 04 – VPC + Hardened Web Server
+
+A two-zone network built by hand, with one Nginx web server.
+
+**Shows:**
+* **Networking:** public and private subnets, route tables and an internet gateway, written without pre-built modules
+* **No SSH:** administration only through AWS SSM Session Manager, so there is no open admin port
+* **Hardening:** IMDSv2 required, encrypted disk, server version hidden
+* **Monitoring:** logs and metrics in CloudWatch, with email alarms
+
+### 05 – Containerised App on ECS Fargate
+
+A Python web service packaged in a container and released automatically on every code push.
+
+**Shows:**
+* **CI/CD:** test → build → security scan → push → deploy, blocked if critical vulnerabilities are found
+* **Safe releases:** zero-downtime rolling deploys with automatic rollback if the new version fails
+* **Secure containers:** small multi-stage image running as a non-root user
+
+### 06 – Event-Driven CSV Pipeline
+
+Uploading a CSV file automatically starts a workflow that validates it and loads it into a database.
+
+**Shows:**
+* **Reliability:** automatic retries for temporary errors; rejected files go to a dead-letter queue with the reason
+* **Alerting:** email on every success and every rejection
+* **Safe re-runs:** uploading the same file twice doesn't create duplicate records
+
+### 07 – AWS Security Baseline
+
+Account-wide security controls, applied to my own earlier projects.
+
+**Shows:**
+* **Audit trail:** every API call recorded, with tamper-evident logs
+* **Compliance checks:** 6 automated rules covering public buckets, open SSH, encryption and instance metadata security
+* **Alerting:** alarms for root account use, denied API calls, firewall changes and logins without MFA
+* **Real findings:** a log of issues it found in projects 03–06 and how I fixed them
+
+---
+
+## 💡 How I Work
+
+- **Everything is code:** each project can be rebuilt from scratch and fully deleted with one command.
+- **Cost-conscious:** resources are torn down after testing; nothing runs unnecessarily.
+- **Documented decisions:** each project includes architecture diagrams, decision records explaining why I chose one option over another, and a runbook.
+- **Honest results:** test data is synthetic and labelled; any deliberate failures or load tests are clearly marked.
+
+## 🤝 Let's Connect
+
+I'm actively looking for Junior Cloud, DevOps or Platform Engineer opportunities. I'd be glad to walk you through any of these projects.
+
+[LinkedIn](https://www.linkedin.com/in/your-profile) · [Email](mailto:your-email@example.com)
