@@ -52,102 +52,53 @@ Each diagram shows how the AWS services in a project connect. Click a project to
  
 <details>
 <summary><b>01 – Static Website on S3</b></summary>
-```mermaid
-flowchart LR
-  DEV["Terraform"] -->|creates bucket, policy, files| S3[("S3 bucket<br/>static website hosting")]
-  U["Visitor's browser"] -->|HTTP| S3
-```
- 
+<img src="https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/blob/main/AWS%20Cloud%20Architecture%20Diagram/01-static-website-s3.svg" alt="Secure Payments API architecture diagram" width="900">
 Terraform creates everything; visitors read the site straight from the S3 website endpoint.
  
 </details>
 <details>
+ 
 <summary><b>02 – Secure Payments Data API</b></summary>
-<img width="4032" height="650" alt="image" src="<img width="4032" height="121" alt="image" src="https://github.com/user-attachments/assets/40429ccc-eb13-4612-8680-bc530cae1a8a" />
+<img src="https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/raw/main/AWS%20Cloud%20Architecture%20Diagram/AWS%20Cloud%20Architecture%20Diagram%20%281%29_edited.png" alt="Secure Payments API architecture diagram" width="900">
 
 </details>
 <details>
  
 <summary><b>03 – Serverless Notes API</b></summary>
-```mermaid
-flowchart LR
-  C["Client / curl"] -->|HTTPS| G["API Gateway<br/>HTTP API, throttled"]
-  G --> L["Lambda<br/>Python"]
-  L -->|"4 actions, 1 table"| D[("DynamoDB<br/>notes table")]
-  L -->|JSON logs| CW["CloudWatch Logs"]
-```
- 
+<img src="https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/blob/main/AWS%20Cloud%20Architecture%20Diagram/03-serverless-notes-api.drawio" alt="Secure Payments API architecture diagram" width="900">
+
 One function handles all four routes; its IAM role can touch only the notes table and its own logs.
  
 </details>
 <details>
+
+ 
 <summary><b>04 – VPC + Hardened Web Server</b></summary>
-```mermaid
-flowchart TB
-  U["Browser"] -->|"HTTP :80"| IGW["Internet Gateway"]
-  subgraph VPC["VPC 10.20.0.0/16 · 2 Availability Zones"]
-    subgraph PUB["Public subnets"]
-      EC2["EC2 t3.micro<br/>Nginx + CloudWatch agent"]
-    end
-    subgraph PRIV["Private subnets"]
-      R["Reserved for data tier"]
-    end
-  end
-  IGW --> EC2
-  ADM["Admin"] -->|"Session Manager, no SSH"| SSM["SSM"] --> EC2
-  EC2 -->|"logs + metrics"| CW["CloudWatch"] -->|alarm| SNS["SNS email"]
-```
+<img src="https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/blob/main/AWS%20Cloud%20Architecture%20Diagram/04-vpc-hardened-web-server.drawio" alt="Secure Payments API architecture diagram" width="900">
  
 Only port 80 is open. Administration goes through SSM, so there is no SSH port or key pair.
  
 </details>
 <details>
 <summary><b>05 – Containerised App on ECS Fargate</b></summary>
-```mermaid
-flowchart LR
-  P["git push main"] --> GA["GitHub Actions"]
-  GA -->|"1. test"| T["pytest"]
-  GA -->|"2. build + scan"| TR["Trivy"]
-  GA -->|"3. push image"| ECR[("ECR")]
-  GA -->|"4. deploy"| ECS["ECS Fargate service"]
-  ECR --> ECS
-  U["Browser"] -->|":80"| ALB["Application Load Balancer"] --> ECS
-  ECS -->|logs| CW["CloudWatch Logs"]
-```
+<img src="https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/blob/main/AWS%20Cloud%20Architecture%20Diagram/05-ecs-fargate-cicd.png" alt="Secure Payments API architecture diagram" width="900">
+
  
 A release is blocked if Trivy finds a critical vulnerability, and ECS rolls back automatically if the new version fails health checks.
  
 </details>
 <details>
 <summary><b>06 – Event-Driven CSV Pipeline</b></summary>
-```mermaid
-flowchart LR
-  U["CSV upload"] --> S3[("S3<br/>incoming/")]
-  S3 -->|"Object Created"| EB["EventBridge"]
-  EB --> SF["Step Functions"]
-  SF --> V["Lambda: validate"]
-  V -->|valid| L["Lambda: load"]
-  L --> DB[("DynamoDB orders")]
-  L --> OK["SNS: success email"]
-  V -->|rejected| DLQ[("SQS dead-letter queue")]
-  L -->|error| DLQ
-  DLQ --> BAD["SNS: rejection email"]
-```
+<img src="https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/blob/main/AWS%20Cloud%20Architecture%20Diagram/06-event-driven-csv-pipeline.drawio.svg" alt="Secure Payments API architecture diagram" width="900">
+
  
 Temporary errors are retried; invalid files are never retried and always end up in the dead-letter queue with a reason.
  
 </details>
 <details>
 <summary><b>07 – AWS Security Baseline</b></summary>
-```mermaid
-flowchart LR
-  API["Every API call"] --> CT["CloudTrail<br/>multi-region"]
-  CT --> S3T[("S3<br/>tamper-evident logs")]
-  CT --> LG["CloudWatch Logs"]
-  LG --> MF["4 metric filters"] --> AL["Alarms"] --> SNS["SNS email"]
-  RES["S3 · security groups ·<br/>volumes · instances"] --> CFG["AWS Config"]
-  CFG --> RULES["6 compliance rules"]
-```
+<img src="https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/blob/main/AWS%20Cloud%20Architecture%20Diagram/04-vpc-hardened-web-server.drawio" alt="Secure Payments API architecture diagram" width="900">
+
  
 CloudTrail records who did what; AWS Config checks whether resources break the rules. Together they detect and explain issues.
  
