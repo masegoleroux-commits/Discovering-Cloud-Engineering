@@ -5,7 +5,7 @@
 📍 Johannesburg, South Africa · 🎯 Open to Junior Cloud, DevOps and Platform Engineer roles
 
 <!-- Add your links here before publishing -->
-[LinkedIn](https://www.linkedin.com/in/your-profile) · [Email](mailto:your-email@example.com) · [CV](link-to-your-cv)
+[LinkedIn](https:/www.linkedin.com/in/masego-mashigo-68a1b3240) · [Email](mailto:mashigokk@outlook.com) · [CV](link-to-your-cv)
 
 ---
 
