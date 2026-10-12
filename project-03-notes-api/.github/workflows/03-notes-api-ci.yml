@@ -3,38 +3,47 @@ name: 03 Notes API CI
 on:
   push:
     paths:
-      - "cloud-pro_3/03-serverless-notes-api/**"
+      - "project-03-notes-api/cloud-pro_3/03-serverless-notes-api/**"
       - ".github/workflows/03-notes-api-ci.yml"
   pull_request:
     paths:
-      - "cloud-pro_3/03-serverless-notes-api/**"
+      - "project-03-notes-api/cloud-pro_3/03-serverless-notes-api/**"
 
 permissions:
   contents: read
 
 defaults:
   run:
-    working-directory: cloud-pro_3/03-serverless-notes-api
+    working-directory: project-03-notes-api/cloud-pro_3/03-serverless-notes-api
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - run: pip install -r requirements-dev.txt
+
       - run: pytest -v
 
   terraform:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: hashicorp/setup-terraform@v3
+
       - run: terraform fmt -check -recursive
-        working-directory: cloud-pro_3/03-serverless-notes-api/infrastructure
+        working-directory: project-03-notes-api/cloud-pro_3/03-serverless-notes-api/infrastructure
+
       - run: terraform init -backend=false
-        working-directory: cloud-pro_3/03-serverless-notes-api/infrastructure
+        working-directory: project-03-notes-api/cloud-pro_3/03-serverless-notes-api/infrastructure
+
       - run: terraform validate
-        working-directory: cloud-pro_3/03-serverless-notes-api/infrastructure
+        working-directory: project-03-notes-api/cloud-pro_3/03-serverless-notes-api/infrastructure
