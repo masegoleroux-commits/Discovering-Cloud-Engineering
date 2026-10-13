@@ -2,7 +2,7 @@
 
 A hand-written two-Availability-Zone VPC with one Ubuntu web server that is reachable only on port 80 and administered only through AWS Systems Manager Session Manager: no SSH port, no key pair. Nginx logs and memory/disk metrics go to CloudWatch, and alarms email me.
 
-![Architecture](docs/screenshots/00-architecture.png)
+![Architecture](https://raw.githubusercontent.com/masegoleroux-commits/Discovering-Cloud-Engineering/main/AWS%20Cloud%20Architecture%20Diagram/04-vpc-hardened-web-server.svg)
 
 ## The problem
 
