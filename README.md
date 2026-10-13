@@ -74,7 +74,7 @@ One function handles all four routes; its IAM role can touch only the notes tabl
 
  
 <summary><b>04 – VPC + Hardened Web Server</b></summary>
-<img src="https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/blob/main/AWS%20Cloud%20Architecture%20Diagram/04-vpc-hardened-web-server.drawio" alt="Secure Payments API architecture diagram" width="900">
+<img src="https://raw.githubusercontent.com/masegoleroux-commits/Discovering-Cloud-Engineering/main/AWS%20Cloud%20Architecture%20Diagram/04-vpc-hardened-web-server.svg" alt="Secure Payments API architecture diagram" width="900">
  
 Only port 80 is open. Administration goes through SSM, so there is no SSH port or key pair.
  
