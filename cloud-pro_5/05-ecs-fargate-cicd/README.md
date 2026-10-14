@@ -2,7 +2,7 @@
 
 A small FastAPI service packaged as a non-root container, stored in Amazon ECR, and run on ECS Fargate behind an Application Load Balancer. Every push to `main` is tested, built, scanned with Trivy, and released with zero downtime, and a failed release rolls back automatically.
 
-![Architecture](docs/screenshots/00-architecture.png)
+![Architecture](docs/00-architecture.png)
 
 ## The problem
 
@@ -58,9 +58,9 @@ Step-by-step guide: [docs/START-HERE.md](docs/START-HERE.md). Short operations c
 |---|----------------|------|
 | 1 | Tests pass locally | ![](docs/screenshots/01-pytest-pass.png) |
 | 2 | First image built and pushed | ![](docs/screenshots/02-bootstrap.png) |
-| 3 | ECR repository with scan results | ![](docs/screenshots/03-ecr-images.png) |
-| 4 | ECS service running 1 task | ![](docs/screenshots/04-ecs-service.png) |
-| 5 | Healthy target behind the load balancer | ![](docs/screenshots/05-target-health.png) |
+| 3 | ECR repository with scan results | ![](docs/screenshots/03-ecrimages.png) |
+| 4 | ECS service running 1 task | ![](docs/screenshots/04-ecsservice.png) |
+| 5 | Healthy target behind the load balancer | ![](docs/screenshots/05-targethealth.png) |
 | 6 | App live (bootstrap version) | ![](docs/screenshots/06-app-bootstrap.png) |
 | 7 | GitHub deploy role, locked to this repo and branch | ![](docs/screenshots/07-github-oidc-role.png) |
 | 8 | Pipeline run succeeded | ![](docs/screenshots/08-pipeline-success.png) |
