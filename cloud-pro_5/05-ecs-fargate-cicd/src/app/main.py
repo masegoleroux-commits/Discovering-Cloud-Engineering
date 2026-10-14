@@ -3,7 +3,6 @@ import os
 import socket
 
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
 
 APP_VERSION = os.environ.get("APP_VERSION", "local")
 
@@ -12,8 +11,8 @@ app = FastAPI(title="container-app", version=APP_VERSION)
 
 @app.get("/health")
 def health():
-    """DELIBERATE FAILURE TEST (Part 9): /health returns 500 so the ECS circuit breaker rolls back."""
-    return JSONResponse({"status": "broken on purpose"}, status_code=500)
+    """Used by the load balancer to decide whether a task can receive traffic."""
+    return {"status": "ok"}
 
 
 @app.get("/")

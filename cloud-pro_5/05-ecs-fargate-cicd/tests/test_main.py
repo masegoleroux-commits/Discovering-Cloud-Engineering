@@ -10,10 +10,9 @@ client = TestClient(app)
 
 
 def test_health_returns_ok():
-    # DELIBERATE FAILURE TEST (Part 9): expects the broken /health. Restore afterwards.
     response = client.get("/health")
-    assert response.status_code == 500
-    assert response.json() == {"status": "broken on purpose"}
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
 
 
 def test_root_reports_service_and_version():
