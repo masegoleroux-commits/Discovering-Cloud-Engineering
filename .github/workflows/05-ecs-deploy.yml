@@ -1,0 +1,112 @@
+name: 05 ECS Fargate deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "cloud-pro_5/05-ecs-fargate-cicd/src/**"
+      - "cloud-pro_5/05-ecs-fargate-cicd/tests/**"
+      - "cloud-pro_5/05-ecs-fargate-cicd/Dockerfile"
+      - "cloud-pro_5/05-ecs-fargate-cicd/requirements*.txt"
+      - ".github/workflows/05-ecs-deploy.yml"
+  workflow_dispatch: {}
+
+env:
+  AWS_REGION: eu-north-1
+  ECR_REPOSITORY: container-app-dev-app
+  ECS_CLUSTER: container-app-dev-cluster
+  ECS_SERVICE: container-app-dev-svc
+  TASK_FAMILY: container-app-dev-app
+  CONTAINER_NAME: app
+  PROJECT_DIR: cloud-pro_5/05-ecs-fargate-cicd
+
+permissions:
+  contents: read
+  id-token: write # lets the workflow request a GitHub OIDC token for AWS
+
+# Never run two deploys at once: overlapping deploys would fight over the service.
+concurrency:
+  group: deploy-05
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cloud-pro_5/05-ecs-fargate-cicd
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: pytest -v
+
+  build-scan-deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ci_auth = "oidc": used when the AWS_DEPLOY_ROLE_ARN variable is set (no stored keys)
+      - name: Configure AWS credentials (OIDC role)
+        if: ${{ vars.AWS_DEPLOY_ROLE_ARN != '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # ci_auth = "access_keys": used when no role variable is set
+      - name: Configure AWS credentials (CI user access keys)
+        if: ${{ vars.AWS_DEPLOY_ROLE_ARN == '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build image
+        run: |
+          IMAGE_URI="${{ steps.ecr.outputs.registry }}/$ECR_REPOSITORY:${GITHUB_SHA::7}"
+          docker build -t "$IMAGE_URI" "$PROJECT_DIR"
+          echo "IMAGE_URI=$IMAGE_URI" >> "$GITHUB_ENV"
+
+      # Check https://github.com/aquasecurity/trivy-action/releases for the latest
+      # release, then pin it to that release's full commit SHA.
+      - name: Scan image (fail on CRITICAL)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.IMAGE_URI }}
+          severity: CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
+
+      - name: Push image
+        run: docker push "$IMAGE_URI"
+
+      - name: Download current task definition
+        run: |
+          aws ecs describe-task-definition --task-definition "$TASK_FAMILY" \
+            --query taskDefinition > task-def.json
+
+      - name: Insert the new image
+        id: render
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-def.json
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ env.IMAGE_URI }}
+          environment-variables: APP_VERSION=${{ github.sha }}
+
+      - name: Deploy and wait for the service to be stable
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render.outputs.task-definition }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ env.ECS_SERVICE }}
+          wait-for-service-stability: true

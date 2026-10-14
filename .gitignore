@@ -22,3 +22,6 @@ __pycache__/
 
 # Local record of deliberate test resources
 .test-violations.env
+
+# Temporary SSM Run Command parameter files
+.ssm-params.json
