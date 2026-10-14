@@ -36,8 +36,8 @@ jobs:
       run:
         working-directory: cloud-pro_5/05-ecs-fargate-cicd
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
@@ -47,12 +47,12 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # ci_auth = "oidc": used when the AWS_DEPLOY_ROLE_ARN variable is set (no stored keys)
       - name: Configure AWS credentials (OIDC role)
         if: ${{ vars.AWS_DEPLOY_ROLE_ARN != '' }}
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
@@ -60,7 +60,7 @@ jobs:
       # ci_auth = "access_keys": used when no role variable is set
       - name: Configure AWS credentials (CI user access keys)
         if: ${{ vars.AWS_DEPLOY_ROLE_ARN == '' }}
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -76,10 +76,10 @@ jobs:
           docker build -t "$IMAGE_URI" "$PROJECT_DIR"
           echo "IMAGE_URI=$IMAGE_URI" >> "$GITHUB_ENV"
 
-      # Check https://github.com/aquasecurity/trivy-action/releases for the latest
-      # release, then pin it to that release's full commit SHA.
+      # Pinned to a full commit SHA (v0.36.0). In 2026 old trivy-action tags such as
+      # 0.28.0 were removed after a supply-chain incident; a SHA can't be moved or deleted.
       - name: Scan image (fail on CRITICAL)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ${{ env.IMAGE_URI }}
           severity: CRITICAL

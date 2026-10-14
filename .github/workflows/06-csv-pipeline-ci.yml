@@ -1,0 +1,40 @@
+name: 06 CSV Pipeline CI
+
+on:
+  push:
+    paths:
+      - "cloud-pro_6/06-event-driven-csv-pipeline/**"
+      - ".github/workflows/06-csv-pipeline-ci.yml"
+  pull_request:
+    paths:
+      - "cloud-pro_6/06-event-driven-csv-pipeline/**"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: cloud-pro_6/06-event-driven-csv-pipeline
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: pytest -v
+
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cloud-pro_6/06-event-driven-csv-pipeline/infrastructure
+    steps:
+      - uses: actions/checkout@v5
+      - uses: hashicorp/setup-terraform@v4
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false
+      - run: terraform validate
