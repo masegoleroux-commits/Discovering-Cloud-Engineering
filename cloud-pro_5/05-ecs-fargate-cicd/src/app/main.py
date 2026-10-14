@@ -12,8 +12,10 @@ app = FastAPI(title="container-app", version=APP_VERSION)
 
 @app.get("/health")
 def health():
+    """DELIBERATE FAILURE TEST (Part 9): /health returns 500 so the ECS circuit breaker rolls back."""
     return JSONResponse({"status": "broken on purpose"}, status_code=500)
- 
+
+
 @app.get("/")
 def root():
     """Shows which version and which task answered, useful to watch a rolling deploy."""
