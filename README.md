@@ -65,6 +65,8 @@ The Cloud Engineering track (03–07) was published from **Monday 12 to Thursday
 
 Each diagram shows how the AWS services in a project connect. Click a project to expand it.
 
+### Cloud Engineering track
+
 <details>
 <summary><b>01 – Static Website on S3</b></summary>
 
@@ -128,11 +130,121 @@ CloudTrail records who did what; AWS Config checks whether resources break the r
 
 </details>
 
+### 🌐 Networking track
+
+The designs for projects 08–12. They show what each project will build; screenshots of the real deployments are added as each one is finished.
+
+<details>
+<summary><b>08 – Hub-and-Spoke Network with Transit Gateway</b> (📅 building Mon 19 Oct)</summary>
+
+```mermaid
+flowchart TB
+  subgraph TGW["Transit Gateway tgw-hub-dev-tgw"]
+    SRT["shared-rt<br/>routes: app, data"]
+    PRT["spokes-rt<br/>routes: shared only"]
+  end
+  S["shared VPC<br/>10.100.0.0/16"] <-->|attachment| SRT
+  A["app VPC<br/>10.101.0.0/16"] <-->|attachment| PRT
+  D["data VPC<br/>10.102.0.0/16"] <-->|attachment| PRT
+  A -. "blocked: no route in spokes-rt" .- D
+```
+
+App and data VPCs can reach shared services but not each other. The block comes from routing alone, and Reachability Analyzer proves it.
+
+</details>
+
+<details>
+<summary><b>09 – Private Subnets with a NAT Instance and Flow Logs</b> (📅 building Tue 20 Oct)</summary>
+
+```mermaid
+flowchart LR
+  subgraph VPC["VPC 10.30.0.0/16"]
+    subgraph PRIV["Private subnet 10.30.11.0/24"]
+      APP["App server<br/>no public IP"]
+    end
+    subgraph PUB["Public subnet 10.30.1.0/24"]
+      NAT["NAT instance t4g.micro<br/>iptables MASQUERADE"]
+    end
+  end
+  APP -->|"0.0.0.0/0 → NAT ENI"| NAT
+  NAT -->|"Elastic IP"| IGW["Internet Gateway"] --> NET["Internet"]
+  VPC -. "every connection" .-> FL["VPC Flow Logs<br/>CloudWatch Logs Insights"]
+  NAT -. "health" .-> AL["Alarm → auto-recover + email"]
+```
+
+The private server has no public IP; all its outbound traffic leaves through a NAT instance I configure myself, and every connection is recorded in Flow Logs.
+
+</details>
+
+<details>
+<summary><b>10 – Zero-Internet Workload with VPC Endpoints</b> (📅 building Wed 21 Oct)</summary>
+
+```mermaid
+flowchart LR
+  subgraph VPC["VPC 10.40.0.0/16 – no internet gateway, no NAT"]
+    EC2["Private workload<br/>t4g.micro"]
+    IE["Interface endpoints<br/>ssm · ssmmessages · ec2messages"]
+    RT["Route table<br/>local + S3/DynamoDB prefix lists"]
+  end
+  EC2 -->|HTTPS| IE --> SSM["Systems Manager"]
+  EC2 --> RT -->|"S3 gateway endpoint<br/>policy: data bucket only"| S3D[("Data bucket<br/>confidential/ readable only via VPCE")]
+  RT -->|"DynamoDB gateway endpoint"| DDB[("Events table")]
+  RT -. "blocked by endpoint policy" .-> S3O[("Any other bucket")]
+  LAP["My laptop (admin)"] -. "AccessDenied by bucket policy" .-> S3D
+```
+
+No internet gateway, no NAT: AWS services are reached privately through endpoints, and endpoint and bucket policies stop data leaving.
+
+</details>
+
+<details>
+<summary><b>11 – Private DNS and Route 53 DNS Firewall</b> (📅 building Thu 22 Oct)</summary>
+
+```mermaid
+flowchart LR
+  C["Client in the VPC"] -->|"DNS question"| RES["Route 53 Resolver<br/>(VPC +2 address)"]
+  RES --> FW{"DNS Firewall<br/>rule group"}
+  FW -->|"doubleclick.net"| NX["BLOCK → NXDOMAIN"]
+  FW -->|"example.org"| SH["BLOCK → sinkhole.corp.internal<br/>192.0.2.1"]
+  FW -->|"example.net"| AL["ALERT → answer + flag"]
+  FW -->|"everything else"| PZ["Private zone corp.internal<br/>app · db · api"]
+  FW --> PUB["Public DNS"]
+  RES -. "every query" .-> QL["Query logs → CloudWatch<br/>Logs Insights"]
+```
+
+Every DNS question passes the firewall first: bad domains are blocked, sinkholed or flagged, and internal names resolve only inside the VPC.
+
+</details>
+
+<details>
+<summary><b>12 – HA Web Tier behind CloudFront and AWS WAF</b> (📅 building Fri 23 Oct)</summary>
+
+```mermaid
+flowchart LR
+  U["Visitors"] -->|HTTPS| CF["CloudFront"]
+  CF -->|"HTTP + secret header"| ALB["Application Load Balancer<br/>+ AWS WAF (regional)<br/>public subnets a/b<br/>SG: CloudFront prefix list only"]
+  subgraph PRIV["Private subnets a / b (no internet route)"]
+    W1["Web server AZ a"]
+    W2["Web server AZ b"]
+  end
+  ALB --> W1
+  ALB --> W2
+  ASG["Auto Scaling group<br/>min 2 · max 4 · CPU 50%"] -. manages .- PRIV
+  PRIV -->|"packages via S3 gateway endpoint"| S3[("Amazon Linux repos in S3")]
+  X["Anyone hitting the ALB directly"] -. "dropped / 403" .-> ALB
+```
+
+Visitors reach the site only through CloudFront and a WAF-protected load balancer; servers in two AZs replace themselves if they fail.
+
+</details>
+
 > Diagrams are written in [Mermaid](https://mermaid.js.org/), which GitHub renders automatically, so they stay up to date with the code.
 
 ---
 
 ## 🔍 Project Details
+
+### Cloud Engineering track
 
 ### 01 – Static Website on S3
 
@@ -202,6 +314,59 @@ Account-wide security controls for my AWS account.
 * **Compliance checks:** 6 automated rules covering public buckets, open SSH, encryption, instance metadata security and the account password policy
 * **Alerting:** alarms for root account use, denied API calls, firewall changes and logins without MFA
 * **Proof it works:** deliberately created violations (open SSH, IMDSv1, an unencrypted disk, a denied API call), clearly labelled as tests, and a findings log with a code review of projects 03–06 against the same rules
+
+
+### 🌐 Networking track (building 19–23 October 2026)
+
+These are the plans for each project. Each section will be updated with real results, screenshots and lessons learned as the project is finished.
+
+### 08 – Hub-and-Spoke Network with Transit Gateway
+
+Three VPCs joined through one Transit Gateway, with route tables that let the app and data networks reach shared services but not each other.
+
+**Will show:**
+* **Segmentation by routing:** separate Transit Gateway route tables for shared services and spokes
+* **IP planning:** non-overlapping address ranges across three VPCs and two Availability Zones
+* **Proof, not assumption:** VPC Reachability Analyzer showing which paths are reachable and which are blocked, and why
+* **Policy as code:** one Terraform setting opens or closes the app-to-data path
+
+### 09 – Private Subnets with a NAT Instance and Flow Logs
+
+A private server with no public IP that reaches the internet through a NAT router I configure myself.
+
+**Will show:**
+* **NAT from first principles:** IP forwarding, iptables MASQUERADE and the EC2 source/destination check
+* **Traffic visibility:** VPC Flow Logs with saved Logs Insights queries for rejected traffic, top talkers and outbound traffic
+* **Self-healing:** a CloudWatch alarm that recovers the NAT instance automatically
+* **Cost trade-off:** roughly 70% cheaper than a managed NAT gateway, with the reliability trade-offs written down
+
+### 10 – Zero-Internet Workload with VPC Endpoints
+
+A server in a VPC with no internet route at all, which still uses S3, DynamoDB and Systems Manager privately.
+
+**Will show:**
+* **Private access to AWS:** gateway endpoints for S3 and DynamoDB, interface endpoints with private DNS for Systems Manager
+* **Data-exfiltration guard:** endpoint policies that only allow the project's own bucket and table
+* **Defence in depth:** a bucket policy that refuses even an administrator outside the VPC
+
+### 11 – Private DNS and Route 53 DNS Firewall
+
+Internal names that exist only inside the VPC, and a DNS firewall that stops bad domains before a connection is made.
+
+**Will show:**
+* **Private DNS:** a Route 53 private hosted zone with internal records
+* **DNS Firewall:** three actions: block, sinkhole and alert
+* **Visibility:** every DNS query logged and searchable with Logs Insights
+
+### 12 – HA Web Tier behind CloudFront and AWS WAF
+
+A web tier across two Availability Zones, reachable only through CloudFront and an AWS WAF-protected load balancer.
+
+**Will show:**
+* **High availability:** an Auto Scaling group across two AZs that replaces failed servers
+* **Edge protection:** AWS WAF with a rate limit and AWS managed rule sets
+* **Origin protection:** the load balancer only accepts CloudFront's IP ranges and a secret header
+* **Private servers:** no internet route; packages install through an S3 gateway endpoint
 
 ---
 
