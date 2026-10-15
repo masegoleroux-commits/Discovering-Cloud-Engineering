@@ -55,7 +55,6 @@
 | 11 | [Private DNS and Route 53 DNS Firewall](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_11/11-private-dns-dns-firewall) | Internal names, plus blocking bad domains before a connection is made | Route 53 private zones, Resolver DNS Firewall, query logging | 📅 Building Thu 22 Oct 2026 |
 | 12 | [HA Web Tier behind CloudFront and AWS WAF](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_12/12-cloudfront-waf-ha-web) | How a real public site is fronted, protected and kept running when a server fails | CloudFront, AWS WAF, ALB, Auto Scaling, origin protection | 📅 Building Fri 23 Oct 2026 |
 
-The tracks below are **planned, not built**. Each project gets a link, a diagram and real results when it's finished. Full plan, costs and account checks: [ROADMAP-13-37.md](ROADMAP-13-37.md).
 
 ### 🔐 Security & Identity (📅 planned 26–30 Oct 2026)
 
