@@ -1,0 +1,3 @@
+# Copy to terraform.tfvars (which git ignores) and fill in.
+owner       = "your-github-handle"
+alert_email = "you@example.com"

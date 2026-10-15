@@ -1,0 +1,4 @@
+order_id,customer_email,amount,currency,order_date
+ORD-2001,not-an-email,249.99,ZAR,2026-10-15
+ORD-2002,test.user@example.com,-5,USD,2026-10-15
+ORD-2002,test.user@example.com,10.00,JPY,15/10/2026

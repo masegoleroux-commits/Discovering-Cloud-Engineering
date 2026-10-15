@@ -1,0 +1,65 @@
+{
+  "Comment": "Validate and load uploaded order CSVs",
+  "StartAt": "ValidateFile",
+  "States": {
+    "ValidateFile": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": { "FunctionName": "${validate_function_arn}", "Payload.$": "$" },
+      "ResultSelector": { "row_count.$": "$.Payload.row_count" },
+      "ResultPath": "$.validation",
+      "Retry": [{
+        "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException", "Lambda.SdkClientException", "Lambda.TooManyRequestsException"],
+        "IntervalSeconds": 2, "MaxAttempts": ${task_max_attempts}, "BackoffRate": 2
+      }],
+      "Catch": [{ "ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "SendToDeadLetterQueue" }],
+      "Next": "LoadOrders"
+    },
+    "LoadOrders": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": { "FunctionName": "${load_function_arn}", "Payload": { "bucket.$": "$.bucket", "key.$": "$.key" } },
+      "ResultSelector": { "loaded_count.$": "$.Payload.loaded_count" },
+      "ResultPath": "$.load",
+      "Retry": [{
+        "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException", "Lambda.SdkClientException", "Lambda.TooManyRequestsException"],
+        "IntervalSeconds": 2, "MaxAttempts": ${task_max_attempts}, "BackoffRate": 2
+      }],
+      "Catch": [{ "ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "SendToDeadLetterQueue" }],
+      "Next": "NotifySuccess"
+    },
+    "NotifySuccess": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "${topic_arn}",
+        "Subject": "CSV loaded",
+        "Message.$": "States.Format('Loaded {} rows from {}', $.load.loaded_count, $.key)"
+      },
+      "End": true
+    },
+    "SendToDeadLetterQueue": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sqs:sendMessage",
+      "Parameters": { "QueueUrl": "${dead_letter_queue_url}", "MessageBody.$": "$" },
+      "ResultPath": null,
+      "Next": "NotifyFailure"
+    },
+    "NotifyFailure": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "${topic_arn}",
+        "Subject": "CSV rejected",
+        "Message.$": "States.Format('Rejected {}. Reason: {}', $.key, $.error.Cause)"
+      },
+      "ResultPath": null,
+      "Next": "MarkFailed"
+    },
+    "MarkFailed": {
+      "Type": "Fail",
+      "Error": "FileRejected",
+      "Cause": "Details are in the dead-letter queue message"
+    }
+  }
+}
