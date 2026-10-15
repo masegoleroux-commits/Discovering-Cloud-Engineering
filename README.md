@@ -11,7 +11,7 @@
 
 ## ⚡ At a Glance (30-second summary)
 
-- **12 AWS projects in two tracks:** the **Cloud Engineering** track (01–07) is built; the **Networking** track (08–12) is being built 19–23 October 2026. Each project is deployed from code (Infrastructure as Code) and torn down after testing to keep costs near zero.
+- **Seven tracks, 37 projects planned:** the **Cloud Engineering** track (01–07) is built; **Networking** (08–12) is being built 19–23 October 2026; **Security, Observability, Kubernetes, Automation and FinOps** (13–37) follow through November. Each project is deployed from code (Infrastructure as Code) and torn down after testing to keep costs near zero.
 - **Security first:** least-privilege IAM, encryption, no SSH access, secrets in AWS Secrets Manager, vulnerability scanning in CI/CD, and an account-wide audit trail with compliance rules.
 - **Tested and automated:** unit tests, security tests, and GitHub Actions pipelines.
 - **Cost-aware by design:** built in my own AWS account with a budget alert; every README states what the project costs per hour and how it's torn down.
@@ -55,9 +55,69 @@
 | 11 | [Private DNS and Route 53 DNS Firewall](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_11/11-private-dns-dns-firewall) | Internal names, plus blocking bad domains before a connection is made | Route 53 private zones, Resolver DNS Firewall, query logging | 📅 Building Thu 22 Oct 2026 |
 | 12 | [HA Web Tier behind CloudFront and AWS WAF](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_12/12-cloudfront-waf-ha-web) | How a real public site is fronted, protected and kept running when a server fails | CloudFront, AWS WAF, ALB, Auto Scaling, origin protection | 📅 Building Fri 23 Oct 2026 |
 
+The tracks below are **planned, not built**. Each project gets a link, a diagram and real results when it's finished. Full plan, costs and account checks: [ROADMAP-13-37.md](ROADMAP-13-37.md).
+
+### 🔐 Security & Identity (📅 planned 26–30 Oct 2026)
+
+| # | Project | What it will demonstrate | Key tech | Status |
+|---|---------|--------------------------|----------|--------|
+| 13 | [Automatic Secret Rotation](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_13/13-secret-rotation) | A secret that rotates itself on a schedule, with the app picking up the new value and the old one revoked, plus proof of the rotation in CloudTrail | Secrets Manager, rotation Lambda, CloudTrail, Python | 📅 Planned |
+| 14 | [KMS Encryption and Key Policies](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_14/14-kms-encryption-key-policies) | A customer-managed key whose policy separates key **admins** from key **users**; S3, DynamoDB and SQS encrypted with it; a deliberate "access denied by key policy" test | AWS KMS, key policies, grants, S3, DynamoDB | 📅 Planned |
+| 15 | [Threat Detection Pipeline](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_15/15-threat-detection-pipeline) | GuardDuty findings (from AWS's built-in **sample findings**, labelled as samples) routed through EventBridge to a formatted email and a Lambda that tags the affected resource | GuardDuty, Security Hub, EventBridge, SNS, Lambda | 📅 Planned |
+| 16 | [Least-Privilege Audit with Access Analyzer](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_16/16-access-analyzer-least-privilege) | Policies checked in CI with IAM Access Analyzer policy validation; an account analyzer finding resources shared outside the account; unused-permission findings turned into tighter policies | IAM Access Analyzer, GitHub Actions, IAM | 📅 Planned |
+| 17 | [Permission Boundaries and Tag-Based Access (ABAC)](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_17/17-permission-boundaries-abac) | Developers can create their own roles but can never exceed a permission boundary; access decided by matching tags, proved with allow/deny tests | IAM permission boundaries, ABAC, IAM policy simulator, Terraform | 📅 Planned |
+
+### 📈 Observability & SRE (📅 planned 2–6 Nov 2026)
+
+| # | Project | What it will demonstrate | Key tech | Status |
+|---|---------|--------------------------|----------|--------|
+| 18 | SLOs and an Error Budget | An availability and latency SLO for the Project 03 API, an error-budget dashboard, and a burn-rate alarm; a deliberate error spike (labelled) shows the budget burning | CloudWatch metrics, metric math, dashboards, alarms | 📅 Planned |
+| 19 | Distributed Tracing Across Lambdas | One request followed across API Gateway, two Lambdas and DynamoDB, finding the slow step in the trace | OpenTelemetry (ADOT), AWS X-Ray, Lambda | 📅 Planned |
+| 20 | Load Test and Auto Scaling | A deliberate, labelled load test with k6 from my laptop; an Auto Scaling group scaling out and back in; the results graphed | EC2 Auto Scaling (t3.micro), ALB, k6, CloudWatch | 📅 Planned |
+| 21 | Structured Logging and Log Analytics | JSON logs from every component, saved Logs Insights queries, metric filters turning log lines into alarms, and retention set for cost | CloudWatch Logs, Logs Insights, metric filters | 📅 Planned |
+| 22 | Chaos Experiment and Runbook | A deliberate fault injection (stop an instance, add latency) with stop conditions, a canary detecting it, and a runbook that was actually followed | AWS FIS, CloudWatch Synthetics, alarms, SNS | 📅 Planned |
+
+### ☸️ Kubernetes (📅 planned 9–13 Nov 2026)
+
+| # | Project | What it will demonstrate | Key tech | Status |
+|---|---------|--------------------------|----------|--------|
+| 23 | Kubernetes Fundamentals (local) | The Project 05 app on a local cluster with Deployments, Services, Ingress, health probes, resource limits and an autoscaler | k3d (or kind), kubectl, Docker | 📅 Planned |
+| 24 | Packaging with Helm | The app as a Helm chart with per-environment values, and a CI pipeline that lints and validates the chart before merge | Helm, helm lint, kubeconform, GitHub Actions | 📅 Planned |
+| 25 | GitOps with Argo CD | The cluster syncing itself from Git: a commit changes production, a revert rolls it back, and manual drift is undone automatically | Argo CD, Helm, k3d | 📅 Planned |
+| 26 | Kubernetes Security | Network policies blocking pod-to-pod traffic, Pod Security Standards rejecting a privileged pod, and image scanning in the cluster | NetworkPolicy, Pod Security Admission, Kyverno, Trivy | 📅 Planned |
+| 27 | A Short EKS Session | The same chart on Amazon EKS for one session, with pods getting AWS permissions through **EKS Pod Identity**, then torn down the same day | Amazon EKS, managed node group (t3.small), Pod Identity, Terraform | 📅 Planned |
+
+### 🤖 Automation & Platform (📅 planned 16–20 Nov 2026)
+
+| # | Project | What it will demonstrate | Key tech | Status |
+|---|---------|--------------------------|----------|--------|
+| 28 | Ansible over SSM (no SSH) | Ansible configuring EC2 servers through Systems Manager, with no SSH port or key; the playbook run twice to show idempotency | Ansible, `aws_ssm` connection, EC2 (t3.micro), S3 | 📅 Planned |
+| 29 | Golden Image Pipeline with Packer | A hardened Amazon Linux image built from code, scanned, tagged with its version, then used by a launch template; old images cleaned up automatically | Packer, EC2 Image Builder concepts, Amazon Inspector (optional) | 📅 Planned |
+| 30 | Patching and Automation Runbooks | A patch baseline and maintenance window keeping servers up to date, and an Automation runbook that fixes a common problem in one click | SSM Patch Manager, maintenance windows, Automation documents | 📅 Planned |
+| 31 | Reusable, Tested Terraform Modules | A versioned module library with `terraform test`, tflint and Checkov security scanning in CI, used by other projects | Terraform modules, terraform test, tflint, Checkov, GitHub Actions | 📅 Planned |
+| 32 | Self-Service Environments | A GitHub Actions button that creates a short-lived environment, checks it against policy (OPA/Conftest) before apply, and destroys it automatically after a set time | GitHub Actions `workflow_dispatch`, OPA/Conftest, Terraform, EventBridge Scheduler | 📅 Planned |
+
+### 💰 Cost / FinOps (📅 planned 23–27 Nov 2026)
+
+| # | Project | What it will demonstrate | Key tech | Status |
+|---|---------|--------------------------|----------|--------|
+| 33 | Budgets and Anomaly Alerts as Code | Budgets and Cost Anomaly Detection created by Terraform, with alerts to email | AWS Budgets, Cost Anomaly Detection, Terraform | 📅 Planned |
+| 34 | Out-of-Hours Auto-Shutdown | Tagged dev resources stopped every evening and started every morning, with the saving calculated | EventBridge Scheduler, Lambda, resource tags | 📅 Planned |
+| 35 | Waste Finder Report | A weekly email listing unattached disks, unused Elastic IPs, old snapshots and idle instances, with their monthly cost | Lambda, EC2 and EBS APIs, SNS, EventBridge Scheduler | 📅 Planned |
+| 36 | Tagging Policy and Auto-Tagging | A Config rule flagging untagged resources, and a Lambda that tags new resources with their creator from CloudTrail | AWS Config `required-tags`, CloudTrail, EventBridge, Lambda | 📅 Planned |
+| 37 | Cost Report from Billing Data | Billing data exported to S3 and queried with Athena: cost by service, by project tag and by day | Data Exports (CUR 2.0), S3, Athena, Glue | 📅 Planned |
+
 ### 🗓️ Release schedule
 
-The Cloud Engineering track (03–07) was published from **Monday 12 to Thursday 15 October 2026**. The Networking track (08–12) follows from **Monday 19 to Friday 23 October 2026**.
+| Dates | Track | Projects |
+|-------|-------|----------|
+| 12–15 Oct 2026 | Cloud Engineering | 03–07 published |
+| 19–23 Oct 2026 | 🌐 Networking | 08–12 |
+| 26–30 Oct 2026 | 🔐 Security & Identity | 13–17 |
+| 2–6 Nov 2026 | 📈 Observability & SRE | 18–22 |
+| 9–13 Nov 2026 | ☸️ Kubernetes | 23–27 |
+| 16–20 Nov 2026 | 🤖 Automation & Platform | 28–32 |
+| 23–27 Nov 2026 | 💰 Cost / FinOps | 33–37 |
 
 ---
 
@@ -238,6 +298,117 @@ Visitors reach the site only through CloudFront and a WAF-protected load balance
 
 </details>
 
+### 🔐 Security & Identity track
+
+The designs for projects 13–17, built 26–30 October 2026. Screenshots of the real deployments are added as each one is finished.
+
+<details>
+<summary><b>13 – Automatic Secret Rotation</b> (📅 planned)</summary>
+
+```mermaid
+flowchart LR
+  SCH["Rotation schedule<br/>every 7 days"] --> SM["Secrets Manager<br/>secret: partner-api-key"]
+  SM -->|"invokes"| ROT["Rotation Lambda<br/>create → set → test → finish"]
+  ROT -->|"1. createSecret: new key as AWSPENDING"| SM
+  ROT -->|"2. setSecret: register new key"| REG[("Key registry<br/>DynamoDB")]
+  ROT -->|"3. testSecret: call API with new key"| API["Demo API<br/>Lambda"]
+  ROT -->|"4. finishSecret: AWSPENDING → AWSCURRENT<br/>key from two rotations ago revoked"| SM
+  APP["Client app<br/>Lambda"] -->|"GetSecretValue (cached)"| SM
+  APP -->|"request + current key"| API
+  API -->|"is this key valid?"| REG
+  SM -. "RotateSecret, GetSecretValue" .-> CT["CloudTrail<br/>proof of every rotation"]
+```
+
+The secret changes itself every 7 days in four steps; the app always reads the current version, and CloudTrail proves each rotation.
+
+</details>
+
+<details>
+<summary><b>14 – KMS Encryption and Key Policies</b> (📅 planned)</summary>
+
+```mermaid
+flowchart LR
+  subgraph KEY["Customer-managed KMS key (key policy)"]
+    CMK["alias/security-demo"]
+  end
+  ADM["Key admin role<br/>can manage and schedule deletion<br/>cannot encrypt or decrypt"] -->|"manage"| CMK
+  APP["App role<br/>can Encrypt / Decrypt / GenerateDataKey"] -->|"use"| CMK
+  CMK --> S3[("S3 bucket<br/>SSE-KMS + bucket key")]
+  CMK --> DDB[("DynamoDB table<br/>encrypted with the key")]
+  CMK --> SQS[("SQS queue<br/>encrypted with the key")]
+  APP --> S3
+  APP --> DDB
+  APP --> SQS
+  ADM -. "Deliberate test: Decrypt → AccessDenied by key policy" .-> S3
+  CMK -. "every key use" .-> CT["CloudTrail<br/>kms:Decrypt, kms:Encrypt events"]
+```
+
+The key policy separates people who **manage** the key from those who **use** it; a deliberate test shows the admin role being refused a decrypt.
+
+</details>
+
+<details>
+<summary><b>15 – Threat Detection Pipeline</b> (📅 planned)</summary>
+
+```mermaid
+flowchart LR
+  GD["Amazon GuardDuty<br/>sample findings (labelled)"] -->|"finding"| EB{"EventBridge rule<br/>severity ≥ 4"}
+  CFG["AWS Config rules<br/>from Project 07"] --> SH["Security Hub<br/>one place for all findings"]
+  GD --> SH
+  EB --> FMT["Formatter Lambda<br/>plain-English summary"]
+  FMT --> SNS["SNS topic"] --> MAIL["Email alert<br/>check junk folder"]
+  EB --> TAG["Responder Lambda<br/>tags the affected resource<br/>SecurityFinding = id<br/>(sample findings: logged only)"]
+  TAG -. "tag only, never deletes" .-> RES["Affected resource"]
+```
+
+GuardDuty sample findings (clearly labelled) become a readable email, and the affected resource is tagged so it is easy to find; nothing is deleted automatically.
+
+</details>
+
+<details>
+<summary><b>16 – Least-Privilege Audit with Access Analyzer</b> (📅 planned)</summary>
+
+```mermaid
+flowchart TB
+  subgraph CI["GitHub Actions on every pull request"]
+    PR["IAM policy JSON changed"] --> VAL["validate-policy<br/>errors and warnings"]
+    VAL --> NEW["check-no-new-access<br/>against approved baseline"]
+    NEW -->|"fail"| BLOCK["PR blocked"]
+    NEW -->|"pass"| MERGE["Merge → terraform apply"]
+  end
+  subgraph ACC["My AWS account"]
+    EXT["Access Analyzer<br/>external access"] -->|"finding"| EB["EventBridge"] --> SNS["SNS email"]
+    UNU["Access Analyzer<br/>unused access (optional, paid)"] -->|"unused permissions"| FIX["Tightened policy<br/>new pull request"]
+  end
+  MERGE --> ACC
+  TEST["Deliberate test:<br/>bucket shared with another account"] -. "detected" .-> EXT
+  FIX --> PR
+```
+
+Risky IAM policies are stopped in the pull request before they reach AWS, and anything shared outside the account triggers an alert.
+
+</details>
+
+<details>
+<summary><b>17 – Permission Boundaries and Tag-Based Access</b> (📅 planned)</summary>
+
+```mermaid
+flowchart TB
+  DEV["Developer role"] -->|"iam:CreateRole allowed ONLY IF<br/>the permission boundary is attached"| NEWR["New role created by the developer"]
+  PB["Permission boundary<br/>maximum allowed permissions"] -. "caps" .-> NEWR
+  DEV -. "Deliberate test: create role without boundary → AccessDenied" .-> DENY1["Denied"]
+  subgraph ABAC["Tag-based access (ABAC)"]
+    BLUE["Role tagged team = blue"] -->|"allowed: tags match"| RB[("Resources tagged team = blue")]
+    BLUE -. "denied: tags differ" .-> RR[("Resources tagged team = red")]
+  end
+  NEWR --> ABAC
+  SIM["IAM policy simulator<br/>+ allow/deny test script"] -. "proves each rule" .-> ABAC
+```
+
+Developers can create roles, but never beyond the boundary; tags decide which resources each role can reach, proved with allow and deny tests.
+
+</details>
+
 > Diagrams are written in [Mermaid](https://mermaid.js.org/), which GitHub renders automatically, so they stay up to date with the code.
 
 ---
@@ -367,6 +538,61 @@ A web tier across two Availability Zones, reachable only through CloudFront and 
 * **Edge protection:** AWS WAF with a rate limit and AWS managed rule sets
 * **Origin protection:** the load balancer only accepts CloudFront's IP ranges and a secret header
 * **Private servers:** no internet route; packages install through an S3 gateway endpoint
+
+
+### 🔐 Security & Identity track (planned 26–30 October 2026)
+
+The plans for each project. Each section will be updated with real results, screenshots and lessons learned as the project is finished.
+
+### 13 – Automatic Secret Rotation
+
+An API key that replaces itself on a schedule: a rotation Lambda creates, registers, tests and promotes a new key, the app always reads the current one, and CloudTrail proves every rotation.
+
+**Will show:**
+* **Custom rotation Lambda** implementing Secrets Manager's four steps: `createSecret`, `setSecret`, `testSecret`, `finishSecret`
+* **Version stages** (`AWSPENDING`, `AWSCURRENT`, `AWSPREVIOUS`) and why the test step comes *before* the switch
+* **Zero-downtime rotation:** the current and previous keys both stay valid, so a client holding a cached key never fails
+* **Client-side caching** so the app doesn't call Secrets Manager on every request
+
+### 14 – KMS Encryption and Key Policies
+
+One customer-managed KMS key encrypting S3, DynamoDB and SQS, with a key policy that separates the people who **manage** the key from the applications that **use** it, proved with a deliberate access-denied test.
+
+**Will show:**
+* **Customer-managed key** with automatic yearly rotation turned on
+* **Separation of duties:** a key-admin role can manage and schedule deletion of the key but **cannot** encrypt or decrypt
+* **One key, three services:** S3 (with an S3 Bucket Key to cut KMS calls), DynamoDB and SQS
+* **How key policies and IAM combine,** including why the account statement in the key policy lets IAM grant access
+
+### 15 – Threat Detection Pipeline
+
+GuardDuty findings turned into readable email alerts within a minute, with the affected resource tagged for investigation, and Security Hub gathering findings from GuardDuty and my Project 07 Config rules in one place.
+
+**Will show:**
+* **GuardDuty** threat detection, tested with AWS's built-in **sample findings** (clearly labelled as samples, never presented as real attacks)
+* **EventBridge rule** filtering findings by severity
+* **Formatter Lambda** turning finding JSON into a short, plain-English email
+* **Safe automated response:** a Lambda that only **tags** the affected resource and never deletes anything
+
+### 16 – Least-Privilege Audit with Access Analyzer
+
+Risky IAM policies stopped in the pull request before they reach AWS, anything shared outside my account flagged within minutes, and unused permissions turned into tighter policies.
+
+**Will show:**
+* **Policy validation in CI:** `validate-policy` flags errors, security warnings and bad practice on every pull request
+* **Custom policy checks:** `check-no-new-access` fails the build if a change grants more than the approved baseline
+* **External access analyzer** finding resources shared outside my account, with EventBridge alerts
+* **Deliberate test:** a bucket policy granting another AWS account access, caught by the analyzer
+
+### 17 – Permission Boundaries and Tag-Based Access
+
+Developers can create their own IAM roles but can never give them more than a permission boundary allows, and tags decide which resources each team can reach, proved with allow and deny tests.
+
+**Will show:**
+* **Permission boundary** that sets the maximum permissions of any role a developer creates
+* **Escalation guardrails:** developers can't create a role without the boundary, remove it, or edit the boundary policy
+* **ABAC:** a role tagged `team = blue` can reach only resources tagged `team = blue`, using `aws:PrincipalTag` and `aws:ResourceTag`
+* **Automated allow/deny tests** with a script and the IAM policy simulator, including deliberate denied attempts
 
 ---
 
