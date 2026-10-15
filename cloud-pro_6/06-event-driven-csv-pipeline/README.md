@@ -2,7 +2,7 @@
 
 Dropping a CSV of orders into an S3 folder starts a Step Functions workflow that validates the file, loads good rows into DynamoDB, and emails the result. A bad file is never silently lost: it goes to an SQS dead-letter queue with the reason, and I get a rejection email. All test data is synthetic.
 
-![Architecture](docs/screenshots/00-architecture.png)
+![Architecture](docs/screenshots/00-architecture.svg)
 
 ## The problem
 
@@ -59,10 +59,10 @@ Step-by-step guide: [docs/START-HERE.md](docs/START-HERE.md). Short operations c
 | 1 | Tests pass locally | ![](docs/screenshots/01-pytest-pass.png) |
 | 2 | Infrastructure deployed from code | ![](docs/screenshots/02-terraform-apply.png) |
 | 3 | The workflow definition | ![](docs/screenshots/03-state-machine-definition.png) |
-| 4 | A good file loaded (green path) | ![](docs/screenshots/04-execution-success.png) |
-| 5 | A bad file rejected (red path) | ![](docs/screenshots/05-execution-rejected.png) |
-| 6 | Rows in DynamoDB | ![](docs/screenshots/06-dynamodb-items.png) |
-| 7 | Rejection reason in the dead-letter queue | ![](docs/screenshots/07-dead-letter-queue.png) |
+| 4 | A good file loaded (green path) | ![](docs/screenshots/04-executionsuccess.png) |
+| 5 | A bad file rejected (red path) | ![](docs/screenshots/05-executionrejected.png) |
+| 6 | Rows in DynamoDB | ![](docs/screenshots/06dynamodb-items.png) |
+| 7 | Rejection reason in the dead-letter queue | ![](docs/screenshots/07-deadletterqueue.png) |
 | 8 | Success and rejection emails | ![](docs/screenshots/08-emails.png) |
 | 9 | Re-upload doesn't duplicate rows | ![](docs/screenshots/09-idempotent-reload.png) |
 | 10 | Everything torn down | ![](docs/screenshots/10-terraform-destroy.png) |
