@@ -1,0 +1,55 @@
+resource "aws_ec2_transit_gateway" "hub" {
+  description                     = "${local.name_prefix} hub"
+  default_route_table_association = "disable" # we choose each attachment's route table ourselves
+  default_route_table_propagation = "disable"
+  dns_support                     = "enable"
+  tags                            = { Name = "${local.name_prefix}-tgw" }
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
+  for_each                                        = var.vpc_cidrs
+  transit_gateway_id                              = aws_ec2_transit_gateway.hub.id
+  vpc_id                                          = aws_vpc.this[each.key].id
+  subnet_ids                                      = [for k, s in local.subnets : aws_subnet.private[k].id if s.vpc == each.key]
+  transit_gateway_default_route_table_association = false
+  transit_gateway_default_route_table_propagation = false
+  tags                                            = { Name = "${local.name_prefix}-${each.key}-attachment" }
+}
+
+# Two TGW route tables create the segmentation:
+#   shared-rt : used by the shared-services VPC, knows how to reach app and data
+#   spokes-rt : used by app and data, knows only how to reach shared (unless allow_app_to_data)
+resource "aws_ec2_transit_gateway_route_table" "shared" {
+  transit_gateway_id = aws_ec2_transit_gateway.hub.id
+  tags               = { Name = "${local.name_prefix}-shared-rt" }
+}
+
+resource "aws_ec2_transit_gateway_route_table" "spokes" {
+  transit_gateway_id = aws_ec2_transit_gateway.hub.id
+  tags               = { Name = "${local.name_prefix}-spokes-rt" }
+}
+
+resource "aws_ec2_transit_gateway_route_table_association" "shared" {
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.this["shared"].id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared.id
+}
+
+resource "aws_ec2_transit_gateway_route_table_association" "spokes" {
+  for_each                       = toset(["app", "data"])
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.this[each.key].id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.spokes.id
+}
+
+# shared-rt learns the app and data routes
+resource "aws_ec2_transit_gateway_route_table_propagation" "into_shared" {
+  for_each                       = toset(["app", "data"])
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.this[each.key].id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared.id
+}
+
+# spokes-rt learns shared always, and app/data only when the switch is on
+resource "aws_ec2_transit_gateway_route_table_propagation" "into_spokes" {
+  for_each                       = toset(var.allow_app_to_data ? ["shared", "app", "data"] : ["shared"])
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.this[each.key].id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.spokes.id
+}

@@ -1,0 +1,36 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+.terraform.lock.hcl
+**/build/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Secrets and local files
+.env
+*.pem
+*.zip
+.DS_Store
+
+# Local record of deliberate test resources
+.test-violations.env
+
+# Temporary SSM Run Command parameter files
+.ssm-params.json
+
+# Live test scratch files
+.test-work/
+.lambda-out.json
+**/.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+crash.log

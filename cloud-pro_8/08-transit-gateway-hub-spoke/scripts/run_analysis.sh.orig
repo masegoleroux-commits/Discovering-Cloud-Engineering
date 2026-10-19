@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Live test cases TC-08-L01..L03: runs VPC Reachability Analyzer on the three saved paths
+# and checks each answer against the segmentation switch. Prints PASS/FAIL for each.
+# Each analysis costs about $0.10, so this run costs about $0.30.
+set -uo pipefail
+export MSYS_NO_PATHCONV=1   # Git Bash on Windows: stop it rewriting /paths (e.g. /dev/sdf) into C:/Program Files/Git/...
+cd "$(dirname "$0")/../infrastructure"
+
+PASSED=0; FAILED=0
+SWITCH=$(terraform output -raw allow_app_to_data)
+echo "== Project 08 live test cases (allow_app_to_data = $SWITCH)"
+printf '      %-9s %-16s %-10s %-9s %s\n' "" "PATH" "REACHABLE" "EXPECTED" "FIRST EXPLANATION (if blocked)"
+ID=0
+
+for name in app_to_shared data_to_shared app_to_data; do
+  ID=$((ID + 1))
+  EXPECTED=True
+  [ "$name" = "app_to_data" ] && [ "$SWITCH" != "true" ] && EXPECTED=False
+  PATH_ID=$(terraform output -raw "path_${name}")
+  ANALYSIS_ID=$(aws ec2 start-network-insights-analysis --network-insights-path-id "$PATH_ID" \
+    --query 'NetworkInsightsAnalysis.NetworkInsightsAnalysisId' --output text)
+
+  STATUS="running"
+  for _ in $(seq 1 30); do
+    STATUS=$(aws ec2 describe-network-insights-analyses --network-insights-analysis-ids "$ANALYSIS_ID" \
+      --query 'NetworkInsightsAnalyses[0].Status' --output text)
+    [ "$STATUS" != "running" ] && break
+    sleep 5
+  done
+
+  FOUND=$(aws ec2 describe-network-insights-analyses --network-insights-analysis-ids "$ANALYSIS_ID" \
+    --query 'NetworkInsightsAnalyses[0].NetworkPathFound' --output text)
+  WHY=$(aws ec2 describe-network-insights-analyses --network-insights-analysis-ids "$ANALYSIS_ID" \
+    --query 'NetworkInsightsAnalyses[0].Explanations[0].ExplanationCode' --output text)
+  [ "$FOUND" = "True" ] && WHY="-"
+  if [ "$FOUND" = "$EXPECTED" ]; then RES=PASS; PASSED=$((PASSED + 1)); else RES=FAIL; FAILED=$((FAILED + 1)); fi
+  printf '  %-4s %-9s %-16s %-10s %-9s %s\n' "$RES" "TC-08-L0$ID" "${name//_/-}" "$FOUND" "$EXPECTED" "$WHY"
+done
+echo
+echo "Result: $PASSED passed, $FAILED failed"
+[ "$FAILED" -eq 0 ]
