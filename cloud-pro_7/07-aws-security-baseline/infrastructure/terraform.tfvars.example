@@ -1,0 +1,9 @@
+# Copy to terraform.tfvars (which git ignores) and fill in.
+owner       = "your-github-handle"
+alert_email = "you@example.com"
+
+# Set to false if apply fails with MaxNumberOfConfigurationRecordersExceeded
+# create_config_recorder = true
+
+# Set to false to skip AWS Config entirely (it charges per recorded change)
+# enable_config = true

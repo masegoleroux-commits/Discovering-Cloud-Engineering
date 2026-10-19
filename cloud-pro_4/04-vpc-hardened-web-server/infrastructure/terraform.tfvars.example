@@ -1,0 +1,16 @@
+# Copy to terraform.tfvars (which git ignores) and fill in.
+owner       = "your-github-handle"
+alert_email = "you@example.com"
+
+# Optional: restrict the website to your own IP
+# allowed_http_cidrs = ["203.0.113.10/32"]
+
+# Emergency fallback ONLY if Session Manager can't connect:
+# enable_ssh_fallback = true
+# ssh_allowed_cidr    = "203.0.113.10/32"   # your IP from https://checkip.amazonaws.com
+# ssh_key_name        = "vpc-web-dev-key"
+
+# If deploy fails with "explicit deny in a service control policy" for
+# DescribeAvailabilityZones or ssm:GetParameter, set these yourself:
+# availability_zones = ["eu-north-1a", "eu-north-1b"]
+# ami_id             = "ami-xxxxxxxxxxxxxxxxx"   # Ubuntu 24.04 (x86_64) in eu-north-1

@@ -1,0 +1,7 @@
+# Copy to terraform.tfvars (which git ignores) and fill in.
+owner = "your-github-handle"
+
+# GitHub Actions sign-in. The default is "access_keys" (a locked-down CI user),
+# because this account's organisation blocks OIDC providers. In an account that
+# allows OIDC, switch to the keyless option:
+# ci_auth = "oidc"

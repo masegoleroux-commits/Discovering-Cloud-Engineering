@@ -1,0 +1,54 @@
+#!/bin/bash
+# Runs once at first boot. Output is in /var/log/cloud-init-output.log
+set -euxo pipefail
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get update -y
+apt-get install -y nginx
+
+# Hardening: hide the Nginx version in headers and error pages
+sed -i 's/# server_tokens off;/server_tokens off;/' /etc/nginx/nginx.conf
+
+cat > /var/www/html/index.html <<'HTML'
+<!doctype html>
+<html><head><title>${name_prefix}</title></head>
+<body style="font-family:sans-serif;max-width:40rem;margin:4rem auto">
+<h1>${name_prefix}</h1>
+<p>Served from a hand-built VPC. Port 80 only. No SSH.</p>
+</body></html>
+HTML
+
+systemctl enable --now nginx
+systemctl reload nginx
+
+# CloudWatch agent (official Ubuntu package from AWS)
+curl -fsSLo /tmp/amazon-cloudwatch-agent.deb \
+  https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+dpkg -i /tmp/amazon-cloudwatch-agent.deb
+
+cat > /opt/aws/amazon-cloudwatch-agent/etc/config.json <<'JSON'
+{
+  "agent": { "run_as_user": "root" },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          { "file_path": "/var/log/nginx/access.log", "log_group_name": "${access_log_group}", "log_stream_name": "{instance_id}" },
+          { "file_path": "/var/log/nginx/error.log",  "log_group_name": "${error_log_group}",  "log_stream_name": "{instance_id}" }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "namespace": "CWAgent",
+    "append_dimensions": { "InstanceId": "$${aws:InstanceId}" },
+    "metrics_collected": {
+      "mem":  { "measurement": ["mem_used_percent"] },
+      "disk": { "measurement": ["used_percent"], "resources": ["/"] }
+    }
+  }
+}
+JSON
+
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json
