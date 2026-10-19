@@ -50,13 +50,12 @@
 
 | # | Project | What it demonstrates | Key tech | Status |
 |---|---------|----------------------|----------|--------|
-| 08 | [Hub-and-Spoke Network with Transit Gateway](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_8/08-transit-gateway-hub-spoke) | Controlling and proving which VPCs can talk to which | Transit Gateway, TGW route tables, Reachability Analyzer | 🧪 Code + test cases ready · building Mon 19 Oct 2026 |
+| 08 | [Hub-and-Spoke Network with Transit Gateway](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_8/08-transit-gateway-hub-spoke) | Controlling and proving which VPCs can talk to which | Transit Gateway, TGW route tables, Reachability Analyzer | ✅ Complete (torn down to avoid cost) |
 | 09 | [Private Subnets with a NAT Instance and Flow Logs](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_9/09-nat-instance-flow-logs) | Outbound internet for private subnets built from first principles, and reading real traffic | NAT instance, iptables, Elastic IP, VPC Flow Logs, Logs Insights | 🧪 Code + test cases ready · building Tue 20 Oct 2026 |
 | 10 | [Zero-Internet Workload with VPC Endpoints](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_10/10-vpc-endpoints-zero-internet) | AWS access with no route to the internet, and no way to copy data out | Gateway + interface endpoints, endpoint policies, `aws:SourceVpce` | 🧪 Code + test cases ready · building Wed 21 Oct 2026 |
 | 11 | [Private DNS and Route 53 DNS Firewall](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_11/11-private-dns-dns-firewall) | Internal names, plus blocking bad domains before a connection is made | Route 53 private zones, Resolver DNS Firewall, query logging | 🧪 Code + test cases ready · building Thu 22 Oct 2026 |
 | 12 | [HA Web Tier behind CloudFront and AWS WAF](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_12/12-cloudfront-waf-ha-web) | How a real public site is fronted, protected and kept running when a server fails | CloudFront, AWS WAF, ALB, Auto Scaling, origin protection | 🧪 Code + test cases ready · building Fri 23 Oct 2026 |
 
-Projects 13–17 have their **code and test cases ready but are not deployed yet**; 18–37 are **planned, not built**. Each project gets a link, a diagram and real results when it's finished. Full plan, costs and account checks: [ROADMAP-13-37.md](ROADMAP-13-37.md).
 
 ### 🔐 Security & Identity (🧪 code + test cases ready · building 26–30 Oct 2026)
 
