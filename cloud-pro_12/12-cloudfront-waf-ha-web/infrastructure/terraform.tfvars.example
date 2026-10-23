@@ -1,0 +1,14 @@
+# Copy to terraform.tfvars (which git ignores) and fill in.
+owner = "your-github-handle"
+
+# Your account only allows one region, so the WAF is attached to the ALB by default:
+# waf_scope = "REGIONAL"
+
+# If deploy fails with an explicit deny on cloudfront:* actions, run without CloudFront:
+# enable_cloudfront = false
+
+# If AWS says "InsufficientInstanceCapacity" in one zone, move both zones: 1 = eu-north-1b + 1c, 2 = 1c + 1a
+# az_index = 1
+
+# If AWS has no t4g.micro capacity, use the x86 Free Tier size instead (the right image is picked for you):
+# instance_type = "t3.micro"
