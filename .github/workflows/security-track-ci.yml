@@ -1,0 +1,98 @@
+name: Security track CI (13-17)
+
+# Offline checks only: unit tests use moto / botocore Stubber, Terraform tests use mock providers.
+# No AWS credentials are needed and nothing is deployed.
+on:
+  push:
+    paths:
+      - "cloud-pro_13/**"
+      - "cloud-pro_14/**"
+      - "cloud-pro_15/**"
+      - "cloud-pro_16/**"
+      - "cloud-pro_17/**"
+      - ".github/workflows/security-track-ci.yml"
+  pull_request:
+    paths:
+      - "cloud-pro_13/**"
+      - "cloud-pro_14/**"
+      - "cloud-pro_15/**"
+      - "cloud-pro_16/**"
+      - "cloud-pro_17/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.project }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - cloud-pro_13/13-secret-rotation
+          - cloud-pro_14/14-kms-encryption-key-policies
+          - cloud-pro_15/15-threat-detection-pipeline
+          - cloud-pro_16/16-access-analyzer-least-privilege
+          - cloud-pro_17/17-permission-boundaries-abac
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v5
+
+      # Projects are pushed one at a time; skip any that aren't in the repo yet
+      - name: Is this project in the repo yet?
+        id: chk
+        working-directory: .
+        run: |
+          if [ -d "${{ matrix.project }}" ]; then echo "exists=true" >> "$GITHUB_OUTPUT"; else echo "exists=false" >> "$GITHUB_OUTPUT"; echo "::notice::${{ matrix.project }} isn't in the repo yet, skipping"; fi
+
+      - name: Does this project have Python unit tests?
+        id: py
+        if: steps.chk.outputs.exists == 'true'
+        run: |
+          if [ -f requirements-dev.txt ]; then echo "has_tests=true" >> "$GITHUB_OUTPUT"; else echo "has_tests=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-python@v6
+        if: steps.chk.outputs.exists == 'true' && steps.py.outputs.has_tests == 'true'
+        with:
+          python-version: "3.12"
+      - name: Unit tests (TC-NN-Unn)
+        if: steps.chk.outputs.exists == 'true' && steps.py.outputs.has_tests == 'true'
+        run: |
+          pip install -r requirements-dev.txt
+          pytest -v
+
+      - uses: hashicorp/setup-terraform@v4
+        if: steps.chk.outputs.exists == 'true'
+        with:
+          terraform_wrapper: false
+      - name: Format check
+        if: steps.chk.outputs.exists == 'true'
+        working-directory: ${{ matrix.project }}/infrastructure
+        run: terraform fmt -check -recursive
+      - name: Init and validate
+        if: steps.chk.outputs.exists == 'true'
+        working-directory: ${{ matrix.project }}/infrastructure
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate
+
+      # The test cases were written and checked with OpenTofu 1.10, so CI runs them with the same tool.
+      - uses: opentofu/setup-opentofu@v1
+        if: steps.chk.outputs.exists == 'true'
+        with:
+          tofu_version: 1.10.6
+          tofu_wrapper: false
+      - name: Offline test cases (TC-NN-Tnn)
+        if: steps.chk.outputs.exists == 'true'
+        working-directory: ${{ matrix.project }}/infrastructure
+        run: |
+          rm -rf .terraform .terraform.lock.hcl
+          tofu init -backend=false -input=false
+          tofu test
+
+      - name: Shell syntax (live test scripts)
+        if: steps.chk.outputs.exists == 'true'
+        run: for f in scripts/*.sh; do bash -n "$f"; done
