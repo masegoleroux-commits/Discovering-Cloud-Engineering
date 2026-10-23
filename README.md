@@ -51,23 +51,23 @@
 | # | Project | What it demonstrates | Key tech | Status |
 |---|---------|----------------------|----------|--------|
 | 08 | [Hub-and-Spoke Network with Transit Gateway](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_8/08-transit-gateway-hub-spoke) | Controlling and proving which VPCs can talk to which | Transit Gateway, TGW route tables, Reachability Analyzer | ✅ Complete (torn down to avoid cost) |
-| 09 | [Private Subnets with a NAT Instance and Flow Logs](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_9/09-nat-instance-flow-logs) | Outbound internet for private subnets built from first principles, and reading real traffic | NAT instance, iptables, Elastic IP, VPC Flow Logs, Logs Insights | 🧪 Code + test cases ready · building Tue 20 Oct 2026 |
-| 10 | [Zero-Internet Workload with VPC Endpoints](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_10/10-vpc-endpoints-zero-internet) | AWS access with no route to the internet, and no way to copy data out | Gateway + interface endpoints, endpoint policies, `aws:SourceVpce` | 🧪 Code + test cases ready · building Wed 21 Oct 2026 |
-| 11 | [Private DNS and Route 53 DNS Firewall](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_11/11-private-dns-dns-firewall) | Internal names, plus blocking bad domains before a connection is made | Route 53 private zones, Resolver DNS Firewall, query logging | 🧪 Code + test cases ready · building Thu 22 Oct 2026 |
-| 12 | [HA Web Tier behind CloudFront and AWS WAF](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_12/12-cloudfront-waf-ha-web) | How a real public site is fronted, protected and kept running when a server fails | CloudFront, AWS WAF, ALB, Auto Scaling, origin protection | 🧪 Code + test cases ready · building Fri 23 Oct 2026 |
+| 09 | [Private Subnets with a NAT Instance and Flow Logs](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_9/09-nat-instance-flow-logs) | Outbound internet for private subnets built from first principles, and reading real traffic | NAT instance, iptables, Elastic IP, VPC Flow Logs, Logs Insights | ✅ Complete (torn down to avoid cost)  |
+| 10 | [Zero-Internet Workload with VPC Endpoints](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_10/10-vpc-endpoints-zero-internet) | AWS access with no route to the internet, and no way to copy data out | Gateway + interface endpoints, endpoint policies, `aws:SourceVpce` | ✅ Complete (torn down to avoid cost) |
+| 11 | [Private DNS and Route 53 DNS Firewall](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_11/11-private-dns-dns-firewall) | Internal names, plus blocking bad domains before a connection is made | Route 53 private zones, Resolver DNS Firewall, query logging | ✅ Complete (torn down to avoid cost) |
+| 12 | [HA Web Tier behind CloudFront and AWS WAF](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_12/12-cloudfront-waf-ha-web) | How a real public site is fronted, protected and kept running when a server fails | CloudFront, AWS WAF, ALB, Auto Scaling, origin protection | ✅ Complete (torn down to avoid cost)  |
 
 
-### 🔐 Security & Identity (🧪 code + test cases ready · building 26–30 Oct 2026)
+### 🔐 Security & Identity (📅 planned 2–6 Nov 2026)
 
 | # | Project | What it will demonstrate | Key tech | Status |
 |---|---------|--------------------------|----------|--------|
-| 13 | [Automatic Secret Rotation](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_13/13-secret-rotation) | A secret that rotates itself on a schedule, with the app picking up the new value and the old one revoked, plus proof of the rotation in CloudTrail | Secrets Manager, rotation Lambda, CloudTrail, Python | 🧪 Code + test cases ready · building Mon 26 Oct 2026 |
-| 14 | [KMS Encryption and Key Policies](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_14/14-kms-encryption-key-policies) | A customer-managed key whose policy separates key **admins** from key **users**; S3, DynamoDB and SQS encrypted with it; a deliberate "access denied by key policy" test | AWS KMS, key policies, grants, S3, DynamoDB | 🧪 Code + test cases ready · building Tue 27 Oct 2026 |
-| 15 | [Threat Detection Pipeline](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_15/15-threat-detection-pipeline) | GuardDuty findings (from AWS's built-in **sample findings**, labelled as samples) routed through EventBridge to a formatted email and a Lambda that tags the affected resource | GuardDuty, Security Hub, EventBridge, SNS, Lambda | 🧪 Code + test cases ready · building Wed 28 Oct 2026 |
-| 16 | [Least-Privilege Audit with Access Analyzer](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_16/16-access-analyzer-least-privilege) | Policies checked in CI with IAM Access Analyzer policy validation; an account analyzer finding resources shared outside the account; unused-permission findings turned into tighter policies | IAM Access Analyzer, GitHub Actions, IAM | 🧪 Code + test cases ready · building Thu 29 Oct 2026 |
-| 17 | [Permission Boundaries and Tag-Based Access (ABAC)](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_17/17-permission-boundaries-abac) | Developers can create their own roles but can never exceed a permission boundary; access decided by matching tags, proved with allow/deny tests | IAM permission boundaries, ABAC, IAM policy simulator, Terraform | 🧪 Code + test cases ready · building Fri 30 Oct 2026 |
+| 13 | [Automatic Secret Rotation](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_13/13-secret-rotation) | A secret that rotates itself on a schedule, with the app picking up the new value and the old one revoked, plus proof of the rotation in CloudTrail | Secrets Manager, rotation Lambda, CloudTrail, Python | 📅 Planned  |
+| 14 | [KMS Encryption and Key Policies](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_14/14-kms-encryption-key-policies) | A customer-managed key whose policy separates key **admins** from key **users**; S3, DynamoDB and SQS encrypted with it; a deliberate "access denied by key policy" test | AWS KMS, key policies, grants, S3, DynamoDB |📅 Planned  |
+| 15 | [Threat Detection Pipeline](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_15/15-threat-detection-pipeline) | GuardDuty findings (from AWS's built-in **sample findings**, labelled as samples) routed through EventBridge to a formatted email and a Lambda that tags the affected resource | GuardDuty, Security Hub, EventBridge, SNS, Lambda | 📅 Planned |
+| 16 | [Least-Privilege Audit with Access Analyzer](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_16/16-access-analyzer-least-privilege) | Policies checked in CI with IAM Access Analyzer policy validation; an account analyzer finding resources shared outside the account; unused-permission findings turned into tighter policies | IAM Access Analyzer, GitHub Actions, IAM |📅 Planned  |
+| 17 | [Permission Boundaries and Tag-Based Access (ABAC)](https://github.com/masegoleroux-commits/Discovering-Cloud-Engineering/tree/main/cloud-pro_17/17-permission-boundaries-abac) | Developers can create their own roles but can never exceed a permission boundary; access decided by matching tags, proved with allow/deny tests | IAM permission boundaries, ABAC, IAM policy simulator, Terraform |📅 Planned  |
 
-### 📈 Observability & SRE (📅 planned 2–6 Nov 2026)
+### 📈 Observability & SRE (📅 planned 9–13 Nov 2026)
 
 | # | Project | What it will demonstrate | Key tech | Status |
 |---|---------|--------------------------|----------|--------|
@@ -87,7 +87,7 @@
 | 26 | Kubernetes Security | Network policies blocking pod-to-pod traffic, Pod Security Standards rejecting a privileged pod, and image scanning in the cluster | NetworkPolicy, Pod Security Admission, Kyverno, Trivy | 📅 Planned |
 | 27 | A Short EKS Session | The same chart on Amazon EKS for one session, with pods getting AWS permissions through **EKS Pod Identity**, then torn down the same day | Amazon EKS, managed node group (t3.small), Pod Identity, Terraform | 📅 Planned |
 
-### 🤖 Automation & Platform (📅 planned 16–20 Nov 2026)
+### 🤖 Automation & Platform (📅 planned)
 
 | # | Project | What it will demonstrate | Key tech | Status |
 |---|---------|--------------------------|----------|--------|
@@ -97,7 +97,7 @@
 | 31 | Reusable, Tested Terraform Modules | A versioned module library with `terraform test`, tflint and Checkov security scanning in CI, used by other projects | Terraform modules, terraform test, tflint, Checkov, GitHub Actions | 📅 Planned |
 | 32 | Self-Service Environments | A GitHub Actions button that creates a short-lived environment, checks it against policy (OPA/Conftest) before apply, and destroys it automatically after a set time | GitHub Actions `workflow_dispatch`, OPA/Conftest, Terraform, EventBridge Scheduler | 📅 Planned |
 
-### 💰 Cost / FinOps (📅 planned 23–27 Nov 2026)
+### 💰 Cost / FinOps (📅 planned )
 
 | # | Project | What it will demonstrate | Key tech | Status |
 |---|---------|--------------------------|----------|--------|
@@ -126,11 +126,11 @@ The offline tests run in GitHub Actions on every push (`networking-track-ci.yml`
 |-------|-------|----------|
 | 12–15 Oct 2026 | Cloud Engineering | 03–07 published |
 | 19–23 Oct 2026 | 🌐 Networking | 08–12 |
-| 26–30 Oct 2026 | 🔐 Security & Identity | 13–17 |
-| 2–6 Nov 2026 | 📈 Observability & SRE | 18–22 |
-| 9–13 Nov 2026 | ☸️ Kubernetes | 23–27 |
-| 16–20 Nov 2026 | 🤖 Automation & Platform | 28–32 |
-| 23–27 Nov 2026 | 💰 Cost / FinOps | 33–37 |
+| 📅 planned 2–6 Nov 2026 | 🔐 Security & Identity | 13–17 |
+|📅 planned  | 📈 Observability & SRE | 18–22 |
+|📅 planned  | ☸️ Kubernetes | 23–27 |
+| 📅 planned  | 🤖 Automation & Platform | 28–32 |
+| 📅 planned  | 💰 Cost / FinOps | 33–37 |
 
 ---
 
